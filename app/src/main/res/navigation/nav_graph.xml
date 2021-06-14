@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/menu_today">
+
+    <fragment
+        android:id="@+id/menu_yesterday"
+        android:name="com.androidstrike.tera.ui.Yesterday"
+        android:label="@string/menu_yesterday"
+        tools:layout="@layout/fragment_yesterday" />
+    <fragment
+        android:id="@+id/menu_today"
+        android:name="com.androidstrike.tera.ui.Today"
+        android:label="@string/menu_today"
+        tools:layout="@layout/fragment_today" />
+    <fragment
+        android:id="@+id/menu_tomorrow"
+        android:name="com.androidstrike.tera.ui.Tomorrow"
+        android:label="@string/menu_tomorrow"
+        tools:layout="@layout/fragment_tommorrow" />
+    <fragment
+        android:id="@+id/history"
+        android:name="com.androidstrike.tera.ui.History"
+        android:label="@string/menu_history"
+        tools:layout="@layout/fragment_history" />
+</navigation>

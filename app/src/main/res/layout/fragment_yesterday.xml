@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.Yesterday">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/menu_yesterday"
+        android:textColor="@color/black"
+        android:id="@+id/txt_yes"
+        android:textSize="32sp"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/bn_toast_yes"
+        android:text="Toast Day of the week"
+        android:layout_below="@id/txt_yes"/>
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/bn_toast_date_yes"
+        android:text="Toast Formatted Yesterday Date"
+        android:layout_below="@id/bn_toast_yes"/>
+
+
+
+</RelativeLayout>

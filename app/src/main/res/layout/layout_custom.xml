@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="8dp"
+        android:layout_margin="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="5"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="09:30am"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:padding="4dp"
+                    android:layout_marginStart="24dp"
+                    android:id="@+id/txt_class_time"/>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CSC 421"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:padding="4dp"
+                    android:layout_marginStart="24dp"
+                    android:id="@+id/txt_course_code"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="C#"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:padding="4dp"
+                    android:layout_marginStart="24dp"
+                    android:id="@+id/txt_course_title"/>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mr Rollo"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:padding="4dp"
+                    android:layout_marginStart="24dp"
+                    android:id="@+id/txt_course_lecturer"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_rating"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:layout_gravity="center"
+                    android:padding="4dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4.5"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:layout_gravity="center"
+                    android:padding="4dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
