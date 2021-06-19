@@ -1,6 +1,5 @@
 package com.androidstrike.tera.data
 
-import java.time.LocalDateTime
 import java.util.*
 
 data class CourseDetail(

@@ -9,4 +9,10 @@
     <string name="menu_history">History</string>
     <string name="menu_settings">Settings</string>
     <string name="text_rating">Rating</string>
+
+    <string name="punctuality_rating_text">Punctuality</string>
+    <string name="fluency_rating_text">Fluency</string>
+    <string name="engagement_rating_text">Engagement</string>
+    <string name="tech_tips_rating_text">Tech Tips</string>
+    <string name="btn_submit_rating_text">Submit Review</string>
 </resources>

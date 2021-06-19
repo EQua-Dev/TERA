@@ -1,7 +1,10 @@
 package com.androidstrike.tera.utils
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -18,26 +21,31 @@ object Common {
     var dowGood = dow[0].toUpperCase()+dow.substring(1)
 
 
-    var c: Date = Calendar.getInstance().time
-    var df: SimpleDateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+//    var c: Date = Calendar.getInstance().time
+//    var df: SimpleDateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
     @RequiresApi(Build.VERSION_CODES.O)
     val formattedToday = date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL))
 
+    //Tomorrow
     @RequiresApi(Build.VERSION_CODES.O)
-    val tomorrow = LocalDate.now().plusDays(1)
+    var tomorrow = LocalDate.now().plusDays(1)
     @RequiresApi(Build.VERSION_CODES.O)
-    val dowTom = tomorrow.dayOfWeek.toString().toLowerCase(Locale.ROOT)
+    var dowTom = tomorrow.dayOfWeek.toString().toLowerCase(Locale.ROOT)
     var dowTomGood = dowTom[0].toUpperCase()+ dowTom.substring(1)
 
     @RequiresApi(Build.VERSION_CODES.O)
     val formattedTomorrow = tomorrow.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL))
 
+    //Yesterday
     @RequiresApi(Build.VERSION_CODES.O)
-    val yesterday = LocalDate.now().minusDays(1)
+    var yesterday = LocalDate.now().minusDays(1)
     @RequiresApi(Build.VERSION_CODES.O)
-    val dowYes = yesterday.dayOfWeek.toString().toLowerCase(Locale.ROOT)
+    var dowYes = yesterday.dayOfWeek.toString().toLowerCase(Locale.ROOT)
     var dowYesGood = dowYes[0].toUpperCase()+ dowYes.substring(1)
     @RequiresApi(Build.VERSION_CODES.O)
-    val formattedYesterday = yesterday.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL))
+    var formattedYesterday = yesterday.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL))
+
+    val lecturersRatingRef = Firebase.firestore.collection("Lecturers")
+
 
 }

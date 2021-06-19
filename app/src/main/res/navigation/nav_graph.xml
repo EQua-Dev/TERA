@@ -20,9 +20,4 @@
         android:name="com.androidstrike.tera.ui.Tomorrow"
         android:label="@string/menu_tomorrow"
         tools:layout="@layout/fragment_tommorrow" />
-    <fragment
-        android:id="@+id/history"
-        android:name="com.androidstrike.tera.ui.History"
-        android:label="@string/menu_history"
-        tools:layout="@layout/fragment_history" />
 </navigation>
