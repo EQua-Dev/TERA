@@ -44,7 +44,7 @@ class History : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
 
-
+        supportActionBar?.title = "Ratings"
         val layoutManager = LinearLayoutManager(this)
         rv_history.layoutManager = layoutManager
         rv_history.addItemDecoration(
@@ -54,36 +54,19 @@ class History : AppCompatActivity() {
             )
         )
 
-//        val connectionCheck = isNetworkAvailable(this) //invoke network connection check from history class
-
-
-        toast("Reached History")
-
-        Log.d("EQUA", "onCreate: From History")
-
-//        if (connectionCheck) {
-//            toast("Check Network Connection")
-//            Log.d("EQUA", "onCreate: Connection No")
-//            Log.d("EQUA1122", "onCreate: ${isNetworkAvailable(this)}")
-//        }
-//        else {
         getRealTimeRating()
-//            Log.d("EQUA", "onCreate: Connection Yes")
-//            Log.d("EQUA2211", "onCreate: ${isNetworkAvailable(this)}")
-//        }
     }
 
     private fun getRealTimeRating() {
         val firestore = FirebaseFirestore.getInstance()
-        val allRatings = firestore.collection("Lecturers").orderBy("counts")
+        val allRatings =
+            firestore.collection("Lecturers").orderBy("avr_rating", Query.Direction.DESCENDING)
         val query = allRatings.whereGreaterThanOrEqualTo(
-            "counts",
+            "avr_rating",
             0
         )//GreaterThanOrEqualTo("avr_rating", 0)//.orderBy("${allRatings.document().id}", Query.Direction.ASCENDING)
         val options = FirestoreRecyclerOptions.Builder<Rating>()
             .setQuery(query, Rating::class.java).build()
-
-        Log.d("EQUAHIATIY", "getRealTimeRating: Suppose Reach Here")
 
         try {
             historyAdapter =
@@ -94,7 +77,6 @@ class History : AppCompatActivity() {
                     ): HistoryAdapter {
                         val itemView = LayoutInflater.from(parent.context)
                             .inflate(R.layout.custom_history_item, parent, false)
-                        Log.d("EQUALALALA", "onCreateViewHolder: Reached Here")
                         return HistoryAdapter(itemView)
                     }
 
@@ -107,23 +89,20 @@ class History : AppCompatActivity() {
                         holder.totalCounts.text = "${model.counts} Total Raters"
                         holder.lecturerRating.text = StringBuilder(model.avr_rating.toString())
 
-                        Log.d("EQUAHISTORY", "getRealTimeRating: ${model.lecturer}")
-
-                        punctualityRating = model.punctuality.toString()
+                        punctualityRating = "${model.punctuality}"
                         fluencyRating = model.fluency.toString()
                         engagementRating = model.engagement.toString()
                         techTipsRating = model.tech_tips.toString()
                         lecturerName = model.lecturer
 
-
                         holder.setClick(object : IRecyclerItemClickListener {
                             override fun onItemClickListener(view: View, position: Int) {
                                 showRatedDialog(
-                                    punctualityRating,
-                                    fluencyRating,
-                                    engagementRating,
-                                    techTipsRating,
-                                    lecturerName
+                                    "${model.punctuality}",
+                                    "${model.fluency}",
+                                    "${model.engagement}",
+                                    "${model.tech_tips}",
+                                    model.lecturer
                                 )
                             }
 
@@ -133,7 +112,6 @@ class History : AppCompatActivity() {
                 }
         } catch (e: Exception) {
             toast(e.message.toString())
-            Log.d("EQUAHISTORYERROR", "getRealTimeRating: ${e.message.toString()}")
         }
 
 
@@ -202,7 +180,7 @@ class History : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        if (historyAdapter!= null)
+        if (historyAdapter != null)
             historyAdapter!!.stopListening()
     }
 

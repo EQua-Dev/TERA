@@ -1,69 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="12dp"
+    android:layout_margin="8dp"
+    android:orientation="horizontal"
+    android:weightSum="5"
     app:cardElevation="4dp">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="12dp"
-        android:weightSum="5">
+        android:layout_weight="3"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/tv_lecturer_name_history"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:orientation="vertical">
+            android:layout_margin="8dp"
+            android:text="Danto"
+            android:textColor="@color/black"
+            android:textSize="24sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Danto"
-                android:textSize="24sp"
-                android:textColor="@color/black"
-                android:layout_margin="12dp"
-                android:id="@+id/tv_lecturer_name_history"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:layout_margin="12dp"
-                android:id="@+id/tv_raters_count"/>
+        <TextView
+            android:id="@+id/tv_raters_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
 
 
-
-
-
-
-        </LinearLayout>
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.1"
-            android:background="@color/black"/>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="4.0"
-                android:layout_centerInParent="true"
-                android:textColor="@color/black"
-                android:textSize="24sp"
-                android:fontFamily="sans-serif-medium"
-                android:id="@+id/tv_history_rating"/>
-
-        </RelativeLayout>
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.02"
+        android:background="@color/black" />
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/tv_history_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="sans-serif-medium"
+            android:text="4.0"
+            android:textColor="@color/black"
+            android:textSize="24sp" />
+
+    </RelativeLayout>
+</LinearLayout>

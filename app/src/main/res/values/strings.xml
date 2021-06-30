@@ -15,4 +15,5 @@
     <string name="engagement_rating_text">Engagement</string>
     <string name="tech_tips_rating_text">Tech Tips</string>
     <string name="btn_submit_rating_text">Submit Review</string>
+    <string name="custom_dialog_title">Rate</string>
 </resources>

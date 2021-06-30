@@ -2,6 +2,7 @@ package com.androidstrike.tera.ui
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,11 +20,12 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_tommorrow.*
+import java.lang.Exception
 import java.time.LocalTime
 
 class Tomorrow : Fragment() {
 
-    var courseAdapter: FirestoreRecyclerAdapter<CourseDetail, CourseAdapter>? = null
+    private var courseAdapter: FirestoreRecyclerAdapter<CourseDetail, CourseAdapter>? = null
 //    private val connectionCheck = History().isNetworkAvailable(context) //invoke network connection check from history class
 
 
@@ -60,16 +62,23 @@ class Tomorrow : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getRealTimeCourses() {
         // check if it is weekend
-        if (Common.dowGood == "Friday" || Common.dowGood == "Saturday" || Common.dowTomGood == "Friday") {
+        if (Common.dowTomGood == "Saturday" || Common.dowTomGood == "Sunday") {
             txt_tom.visibility = View.VISIBLE
             txt_tom.text = "Lecture Free Day \n Enjoy the Weekend!"
+//            Log.d("EQUA", "getRealTimeCourses: ")
         }else {
             val firestore = FirebaseFirestore.getInstance()
             val tomorrowCourses = firestore.collection(Common.dowTomGood)
-            val query = tomorrowCourses.whereEqualTo("course_time", "${Common.formattedTomorrow}")
+            val query = tomorrowCourses.whereEqualTo("course_time", "${Common.formattedTomorrow}")//.orderBy("course_time")
+//        activity?.toast(Common.formattedTomorrow)
             val options = FirestoreRecyclerOptions.Builder<CourseDetail>()
                 .setQuery(query, CourseDetail::class.java).build()
 
+//        val omo : CourseDetail? = null
+//        Log.d("EQUA!!@@##$$", "getRealTimeCourses: ${omo?.course}")
+
+//        activity?.toast(omo?.course.toString())
+        try {
             courseAdapter =
                 object : FirestoreRecyclerAdapter<CourseDetail, CourseAdapter>(options) {
                     override fun onCreateViewHolder(
@@ -87,7 +96,7 @@ class Tomorrow : Fragment() {
                         model: CourseDetail
                     ) {
                         holder?.txtCourseCode?.text = StringBuilder(model?.course_code!!)
-                        holder?.txtCourseTitle?.text = StringBuilder(model?.course!!)
+                        holder?.txtCourseTitle?.text =StringBuilder(model?.course!!)
                         holder?.txtCourseLecturer?.text = StringBuilder(model?.lecturer!!)
 
                         val fmt = model.time
@@ -109,6 +118,10 @@ class Tomorrow : Fragment() {
 
                 }
 
+        }catch (e: Exception){
+            activity?.toast(e.message.toString())
+        }
+
             rv_tomorrow.adapter = courseAdapter
 
 
@@ -120,10 +133,11 @@ class Tomorrow : Fragment() {
 //        if (!connectionCheck)
 //            activity?.toast("Check Network Connection")
 //        else
-        if (courseAdapter!= null)
+//        if (courseAdapter!= null)
             courseAdapter!!.startListening()
-        else
-            activity?.toast("lalala")    }
+//        else
+//            activity?.toast("lalala nawa")
+            }
 
     override fun onStop() {
         super.onStop()

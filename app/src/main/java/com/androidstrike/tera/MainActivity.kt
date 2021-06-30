@@ -20,32 +20,21 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.Theme_TERA)
         setContentView(R.layout.activity_main)
 
-//        val connectionCheck = History().isNetworkAvailable(this)
-
-//        setSupportActionBar(findViewById(R.id.tool_bar))
-
-//        Log.d("EQUAMAINACTIVITY", "onCreate: $connectionCheck")
-//        Log.d("EQUAMAINACTIVITY", "onCreate: ${!connectionCheck}")
-//        if (!connectionCheck)
-//            toast("Check Connection")
-//        else{
-            val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-            val navHostFragment =
-                supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
-            val navController = navHostFragment.navController
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        val navController = navHostFragment.navController
 
 
-            val appBarConfiguration =
-                AppBarConfiguration(setOf(R.id.menu_yesterday, R.id.menu_today, R.id.menu_tomorrow))
+        val appBarConfiguration =
+            AppBarConfiguration(setOf(R.id.menu_yesterday, R.id.menu_today, R.id.menu_tomorrow))
 
-            setupActionBarWithNavController(navController, appBarConfiguration)
-//        setupWithNavController(navController,appBarConfiguration)
+        setupActionBarWithNavController(navController, appBarConfiguration)
 
-
-            bottomNavigationView.setupWithNavController(navController)
-//        }
+        bottomNavigationView.setupWithNavController(navController)
 
     }
 
@@ -62,13 +51,6 @@ class MainActivity : AppCompatActivity() {
         if (id == R.id.action_history) {
             val i = Intent(this, History::class.java)
             startActivity(i)
-//            actionBar!!.hide()
-//            bottomNavigationView.visibility = View.GONE
-//            val transaction = supportFragmentManager.beginTransaction()
-//            transaction.replace(R.id.fragmentContainerView, History())
-//            transaction.commit()
-//
-
         }
         if (id == R.id.action_settings) {
             Toast.makeText(this, "Settings Clicked", Toast.LENGTH_SHORT).show()

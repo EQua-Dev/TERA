@@ -1,29 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:layout_margin="8dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.cardview.widget.CardView
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardElevation="4dp"
-        android:layout_margin="16dp">
+        android:text="@string/custom_dialog_title"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:padding="24dp"
+        android:id="@+id/custom_text_title"
+        android:gravity="center_horizontal"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="4dp"
+            android:layout_weight="1"
+            android:background="#172"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="4dp"
+            android:layout_weight="1"
+            android:background="#217" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="4dp"
+            android:layout_weight="1"
+            android:background="#712"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="4dp"
+            android:layout_weight="1"
+            android:background="#777" />
+
+    </LinearLayout>
 
 
-            <com.ramotion.fluidslider.FluidSlider
+    <com.ramotion.fluidslider.FluidSlider
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
+                android:layout_gravity="center"
                 app:bar_color="#172"
+                android:padding="24dp"
                 app:size="small"
                 app:initial_position="0"
                 android:id="@+id/punctuality_bar"/>
@@ -40,6 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
+                android:padding="24dp"
                 app:size="small"
                 app:initial_position="0"
                 app:bar_color="#217"
@@ -58,6 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
+                android:padding="24dp"
                 app:size="small"
                 app:initial_position="0"
                 app:bar_color="#712"
@@ -77,6 +112,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
+                android:padding="24dp"
                 app:size="small"
                 app:initial_position="0"
                 app:bar_color="#777"
@@ -95,9 +131,4 @@
                 android:layout_margin="16dp"
                 android:text="@string/btn_submit_rating_text"
                 android:id="@+id/btn_submit_review"/>
-        </LinearLayout>
-
-
-    </androidx.cardview.widget.CardView>
-
 </LinearLayout>

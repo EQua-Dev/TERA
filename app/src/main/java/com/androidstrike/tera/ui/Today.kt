@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.androidstrike.tera.R
 import com.androidstrike.tera.data.CourseDetail
 import com.androidstrike.tera.ui.adapter.CourseAdapter
@@ -27,7 +28,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.ramotion.fluidslider.FluidSlider
 import kotlinx.android.synthetic.main.fragment_today.*
-import kotlinx.android.synthetic.main.fragment_tommorrow.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,15 +43,7 @@ class Today : Fragment() {
 
     var courseAdapter: FirestoreRecyclerAdapter<CourseDetail, CourseAdapter>? = null
     lateinit var lectureTime: String
-//    val connectionCheck = History().isNetworkAvailable(context)
-//
-//    fun isThereConnection(){
-//        if (!connectionCheck)
-//            Log.d("EQUABEFORE", "isThereConnection: omoda")
-//        else
-//            return
-//
-//    }
+    lateinit var todayRecyclerView: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,29 +58,18 @@ class Today : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
 //        isThereConnection()
+        todayRecyclerView = rv_today
+
+        getRealTimeCourses()
 
         val layoutManager = LinearLayoutManager(requireContext())
-        rv_today.layoutManager = layoutManager
-        rv_today.addItemDecoration(
+        todayRecyclerView.layoutManager = layoutManager
+        todayRecyclerView.addItemDecoration(
             DividerItemDecoration(
                 requireContext(),
                 layoutManager.orientation
             )
         )
-
-
-        Log.d("EQUA", "onActivityCreated: ${LocalTime.now()}")
-
-//        Log.d("EQUA11223344", "onCreateView: $connectionCheck")
-//        Log.d("EQUA11223344", "onCreateView: ${!connectionCheck}")
-
-
-//        if (connectionCheck)
-        getRealTimeCourses()
-//        else
-//            activity?.toast("Check Network Connection")
-
-        Log.d("EQUA", "onActivityCreated: Reached Here")
 
     }
 
@@ -98,103 +79,99 @@ class Today : Fragment() {
             txt.visibility = View.VISIBLE
             txt.text = "Lecture Free Day\nEnjoy the Weekend!"
         } else if (Common.dowGood == "Sunday") {
-            txt_tom.visibility = View.VISIBLE
-            txt_tom.text = "Lecture Free Day \n Prepare for Tomorrow!"
+            txt.visibility = View.VISIBLE
+            txt.text = "Lecture Free Day \n Prepare for Tomorrow!"
         } else {
-
             val firestore = FirebaseFirestore.getInstance()
-            val todayCourses = firestore.collection(Common.dowGood)
-            val query = todayCourses.whereEqualTo("course_time", "${Common.formattedToday}")
+            val todayCourses = firestore.collection(Common.dowGood).whereEqualTo("course_time", "${Common.formattedToday}")
+//            val query = todayCourses.whereEqualTo("course_time", "${Common.formattedToday}")
             val options = FirestoreRecyclerOptions.Builder<CourseDetail>()
-                .setQuery(query, CourseDetail::class.java).build()
+                .setQuery(todayCourses, CourseDetail::class.java).build()
 
-            courseAdapter =
-                object : FirestoreRecyclerAdapter<CourseDetail, CourseAdapter>(options) {
-                    override fun onCreateViewHolder(
-                        parent: ViewGroup,
-                        viewType: Int
-                    ): CourseAdapter {
-                        val itemView = LayoutInflater.from(parent.context)
-                            .inflate(R.layout.custom_day_course, parent, false)
-                        return CourseAdapter(itemView)
-                    }
+            try {
+                courseAdapter =
+                    object : FirestoreRecyclerAdapter<CourseDetail, CourseAdapter>(options) {
+                        override fun onCreateViewHolder(
+                            parent: ViewGroup,
+                            viewType: Int
+                        ): CourseAdapter {
+                            val itemView = LayoutInflater.from(parent.context)
+                                .inflate(R.layout.custom_day_course, parent, false)
+                            return CourseAdapter(itemView)
+                        }
 
-                    override fun onBindViewHolder(
-                        holder: CourseAdapter,
-                        position: Int,
-                        model: CourseDetail
-                    ) {
-                        holder?.txtCourseCode?.text = StringBuilder(model?.course_code!!)
-                        holder?.txtCourseTitle?.text = StringBuilder(model?.course!!)
-                        holder?.txtCourseLecturer?.text = StringBuilder(model?.lecturer!!)
+                        override fun onBindViewHolder(
+                            holder: CourseAdapter,
+                            position: Int,
+                            model: CourseDetail
+                        ) {
+                            holder.txtCourseCode.text = StringBuilder(model.course_code!!)
+                            holder.txtCourseTitle.text = StringBuilder(model.course!!)
+                            holder.txtCourseLecturer.text = StringBuilder(model.lecturer!!)
 
-                        val fmt = model.time
-                        val bla = LocalTime.of(
-                            fmt?.hours!!,
-                            fmt.minutes
-                        )
+                            val fmt = model.time
+                            val bla = LocalTime.of(
+                                fmt?.hours!!,
+                                fmt.minutes
+                            )
 
-                        val nameOfLecturer = model.lecturer.toString()
+                            val nameOfLecturer = model.lecturer.toString()
 
-                        val omo = nameOfLecturer.split(" ".toRegex())
-                        val pureLecturerName = omo[1]
+                            val omo = nameOfLecturer.split(" ".toRegex())
+                            val pureLecturerName = omo[1]
 
-                        val nameOfCourse = model.course.toString()
+                            val nameOfCourse = model.course.toString()
 
-                        holder?.txtCourseTime?.text = bla.toString()
-                        lectureTime = model.time.toString()
+                            holder.txtCourseTime.text = bla.toString()
+                            lectureTime = model.time.toString()
+//
 
+                            holder.setClick(object : IRecyclerItemClickListener {
+                                override fun onItemClickListener(view: View, position: Int) {
+                                    val timeNow = LocalTime.now()
+                                    val fmtTimeNow =
+                                        timeNow.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
 
-                        holder?.setClick(object : IRecyclerItemClickListener {
-                            override fun onItemClickListener(view: View, position: Int) {
-                                val timeNow = LocalTime.now()
-                                val fmtTimeNow =
-                                    timeNow.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+                                    isRated()
 
-                                isRated()
-
-                                val c = Calendar.getInstance()
-                                val format = SimpleDateFormat("HH:mm")
-                                val currentTime = format.format(c.time)
-                                val sixPm = "18:00"
+                                    val c = Calendar.getInstance()
+                                    val format = SimpleDateFormat("HH:mm")
+                                    val currentTime = format.format(c.time)
+                                    val sixPm = "18:00"
 //                                first check if the time is up to 6pm
-//                                if (currentTime.compareTo(sixPm) < 0) {
-//                                    activity?.toast("Class Rating Available From 6PM")
-//                                } else {
-                                if (isRated()) {//(sharedPrefs.getBoolean("${model.time}", true)) {
-                                    //check if the class has already been rated
-                                    activity?.toast("Class Already Rated")
-                                    Log.d(
-                                        "EQUA",
-                                        "onItemClickListener: Does not know what it is doing"
-                                    )
+                                if (currentTime.compareTo(sixPm) < 0) {
+                                    activity?.toast("Class Rating Available From 6PM")
                                 } else {
-                                    showRatingDialog(pureLecturerName)
-                                    Log.d("EQUA", "onItemClickListener: meant to show dialog")
-                                    //save in shared pref that the course for that particular timestamp has been rated
-                                    val sharedPref = requireActivity().getSharedPreferences(
-                                        "Is_Rated",
-                                        Context.MODE_PRIVATE
-                                    )
-                                    val editor = sharedPref.edit()
-                                    editor.putBoolean(lectureTime, false)
-                                    editor.apply()
+                                    if (isRated()) {//(sharedPrefs.getBoolean("${model.time}", true)) {
+                                        //check if the class has already been rated
+                                        activity?.toast("Class Already Rated")
+                                    } else {
+                                        showRatingDialog(pureLecturerName)
+                                        val sharedPref = requireActivity().getSharedPreferences(
+                                            "Is_Rated",
+                                            Context.MODE_PRIVATE
+                                        )
+                                        val editor = sharedPref.edit()
+                                        editor.putBoolean(lectureTime, false)
+                                        editor.apply()
 
-//                                    }
+                                    }
+                                    }
+
                                 }
+                            })
+                        }
 
-                            }
-                        })
                     }
 
-                }
+            }catch (e: Exception){
+                activity?.toast(e.message.toString())
+            }
 
-//            courseAdapter!!.startListening()
-            rv_today.adapter = courseAdapter
 
         }
-
-
+        courseAdapter?.startListening()
+        todayRecyclerView.adapter = courseAdapter
     }
 
     private fun isRated(): Boolean {
@@ -325,7 +302,6 @@ class Today : Fragment() {
 
                 //in order to successfully add the new ratings to the average, some math logic
                 val avrRatDissolved = oldCount * oldAvrRating
-                Log.d("EQUA", "updateRatingTransaction: $avrRatDissolved")
                 val newTotalRating =
                     (newPunctuality + newFluency + newEngagement + newTechTips) / 4 //total of the new ratings
                 val newAvrRating =
@@ -346,7 +322,6 @@ class Today : Fragment() {
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 activity?.toast("transaction${e.message.toString()}")
-                Log.d("EQUA", "updateRatingTransaction: ${e.message.toString()}")
             }
         }
     }
@@ -378,15 +353,6 @@ class Today : Fragment() {
                 Log.d("EQUA", "updateRating: error here")
             }
         }
-    }
-
-
-    override fun onStart() {
-        super.onStart()
-        if (courseAdapter != null)
-            courseAdapter!!.startListening()
-        else
-            activity?.toast("lalala")
     }
 
     override fun onStop() {
