@@ -42,6 +42,7 @@ class History : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.Theme_TERA)
         setContentView(R.layout.activity_history)
 
         supportActionBar?.title = "Ratings"

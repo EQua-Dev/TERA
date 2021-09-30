@@ -65,16 +65,12 @@ class Yesterday : Fragment() {
                 layoutManager.orientation
             )
         )
-
-//        if (!connectionCheck)
-//            activity?.toast("Check Network Connection")
-//        else
         getRealTimeCourses()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getRealTimeCourses() {
-        if (Common.dowYesGood == "Friday") {
+        if (Common.dowYesGood == "Friday" || Common.dowYesGood == "Saturday") {
             txt_yes.visibility = View.VISIBLE
             txt_yes.text = "Lecture Free Day!"
         } else {
@@ -100,9 +96,9 @@ class Yesterday : Fragment() {
                         position: Int,
                         model: CourseDetail
                     ) {
-                        holder?.txtCourseCode?.text = StringBuilder(model?.course_code!!)
-                        holder?.txtCourseTitle?.text = StringBuilder(model?.course!!)
-                        holder?.txtCourseLecturer?.text = StringBuilder(model?.lecturer!!)
+                        holder.txtCourseCode.text = StringBuilder(model.course_code!!)
+                        holder.txtCourseTitle.text = StringBuilder(model.course!!)
+                        holder.txtCourseLecturer.text = StringBuilder(model.lecturer!!)
 
                         val fmt = model.time
                         val bla = LocalTime.of(
@@ -115,33 +111,38 @@ class Yesterday : Fragment() {
 
                         val omo = nameOfLecturer.split(" ".toRegex())
                         val pureLecturerName = omo[1]
-                        Log.d("EQUA", "onBindViewHolder: $pureLecturerName")
 
 
-                        holder?.txtCourseTime?.text = bla.toString()
+                        holder.txtCourseTime.text = bla.toString()
                         lectureTime = model.time.toString()
+                        Log.d("EQua1", "onBindViewHolder: $lectureTime")
 
-                        holder?.setClick(object : IRecyclerItemClickListener {
+                        holder.setClick(object : IRecyclerItemClickListener {
                             override fun onItemClickListener(view: View, position: Int) {
+                                Log.d("EQua", "onItemClickListener: $nameOfCourse")
+                                Log.d("EQua", "onItemClickListener: ${model.time}")
+                                lectureTime = "${model.time}"
+                                Log.d("EQua", "onItemClickListenerLT: $lectureTime")
+
                                 val timeNow = LocalDateTime.now()
                                 val fmtTimeNow =
                                     timeNow.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
-                                Log.d("EQUA", "onItemClickListener: $fmtTimeNow")
-                                isRated()
+//                                isRated()
 
-                                if (!isRated()){//(sharedPrefs.getBoolean("${model.time}", true)) {
+                                if (!isRated()) {//(sharedPrefs.getBoolean("${model.time}", true)) {
                                     showRatingDialog(pureLecturerName)
-                                    Log.d("EQUA", "onItemClickListener: meant to show dialog")
                                     //save in shared pref that the course for that particular timestamp has been rated
-                                    val sharedPref = requireActivity().getSharedPreferences("Is_Rated", Context.MODE_PRIVATE)
+                                    val sharedPref = requireActivity().getSharedPreferences(
+                                        "Is_Rated",
+                                        Context.MODE_PRIVATE
+                                    )
                                     val editor = sharedPref.edit()
-                                    editor.putBoolean(lectureTime, true)
+                                    editor.putBoolean("${model.time}", true)
                                     editor.apply()
 
                                 } else {
                                     //check if the class has already been rated
-                                        activity?.toast("Class Already Rated")
-                                    Log.d("EQUA", "onItemClickListener: Does not know what it is doing")
+                                    activity?.toast("Class Already Rated")
                                 }
 
 
@@ -202,7 +203,6 @@ class Yesterday : Fragment() {
         punctualitySlider.position = 0.3f
         punctualitySlider.startText = "$ratingMin"
         punctualitySlider.endText = "$ratingMax"
-//        punctualitySlider.beginTrackingListener = btnClickFalse
 
         fluencySlider.positionListener = { pos ->
             fluencySlider.bubbleText =
@@ -211,7 +211,6 @@ class Yesterday : Fragment() {
         fluencySlider.position = 0.3f
         fluencySlider.startText = "$ratingMin"
         fluencySlider.endText = "$ratingMax"
-        //fluencySlider.beginTrackingListener = btnClick
 
         engagementSlider.positionListener = { pos ->
             engagementSlider.bubbleText =
@@ -220,7 +219,6 @@ class Yesterday : Fragment() {
         engagementSlider.position = 0.3f
         engagementSlider.startText = "$ratingMin"
         engagementSlider.endText = "$ratingMax"
-        //engagementSlider.beginTrackingListener = btnClick
 
         techTipsSlider.positionListener = { pos ->
             techTipsSlider.bubbleText =
@@ -229,7 +227,6 @@ class Yesterday : Fragment() {
         techTipsSlider.position = 0.3f
         techTipsSlider.startText = "$ratingMin"
         techTipsSlider.endText = "$ratingMax"
-//        techTipsSlider.endTrackingListener = btnClickTrue
 
         submitReviewButton.setOnClickListener {
             //get the rating from each bar and assign to a variable
@@ -241,8 +238,6 @@ class Yesterday : Fragment() {
                 engagementSlider.bubbleText.toString().toInt()
             val techTipsRating =
                 techTipsSlider.bubbleText.toString().toInt()
-
-            Log.d("EQUA", "showRatingDialog: $punctualityRating")
 
             updateRatingTransaction(
                 pureLecturerName,
@@ -265,14 +260,12 @@ class Yesterday : Fragment() {
     ) = CoroutineScope(Dispatchers.IO).launch {
         try {
             Firebase.firestore.runTransaction { transaction ->
-//                Firebase.firestore.collection("Lecturers").document()
                 val lecturerRef = Common.lecturersRatingRef.document("$pureLecturerName")
                 Log.d("EQUA", "updateRatingTransaction: $pureLecturerName")
                 val rating = transaction.get(lecturerRef)
                 val oldCount = rating["counts"] as Long //gets the count in the db
                 val oldAvrRating = rating["avr_rating"] as Long //gets the average rating in the db
                 val newCount = rating["counts"] as Long + 1 //increases the count in the db by 1
-                Log.d("EQUA1122", "updateRatingTransaction: $newCount")
                 val newPunctuality =
                     ((rating["punctuality"] as Long * oldCount) + punctualityRating) / newCount //adds to the punctuality rating in the db
                 val newFluency =
@@ -305,7 +298,6 @@ class Yesterday : Fragment() {
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 activity?.toast("transaction${e.message.toString()}")
-                Log.d("EQUA", "updateRatingTransaction: ${e.message.toString()}")
             }
         }
     }
@@ -328,12 +320,10 @@ class Yesterday : Fragment() {
                 batch.update(lecturerRef, "engagement", engagementRating)
                 batch.update(lecturerRef, "tech_tips", techTipsRating)
                 batch.update(lecturerRef, "avr_rating", avrRating)
-                Log.d("EQUA", "updateRating: Rating Updating")
             }.await()
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 activity?.toast("transaction${e.message.toString()}")
-//                Log.d("EQUA", "updateRating: error here")
             }
         }
     }
@@ -344,10 +334,9 @@ class Yesterday : Fragment() {
 //        if (!connectionCheck)
 //            activity?.toast("Check Network Connection")
 //        else
-        if (courseAdapter!= null)
+        if (courseAdapter != null)
             courseAdapter!!.startListening()
-        else
-            activity?.toast("lalala")    }
+    }
 
     override fun onStop() {
         super.onStop()

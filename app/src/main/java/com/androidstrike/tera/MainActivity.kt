@@ -52,9 +52,7 @@ class MainActivity : AppCompatActivity() {
             val i = Intent(this, History::class.java)
             startActivity(i)
         }
-        if (id == R.id.action_settings) {
-            Toast.makeText(this, "Settings Clicked", Toast.LENGTH_SHORT).show()
-        }
+
         return super.onOptionsItemSelected(item)
     }
 

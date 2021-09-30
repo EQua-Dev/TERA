@@ -132,8 +132,9 @@ class Today : Fragment() {
                                     val fmtTimeNow =
                                         timeNow.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
 
-                                    isRated()
+                                    lectureTime = "${model.time}"
 
+//                                    isRated()
                                     val c = Calendar.getInstance()
                                     val format = SimpleDateFormat("HH:mm")
                                     val currentTime = format.format(c.time)
@@ -285,27 +286,35 @@ class Today : Fragment() {
             Firebase.firestore.runTransaction { transaction ->
 //                Firebase.firestore.collection("Lecturers").document()
                 val lecturerRef = Common.lecturersRatingRef.document("$pureLecturerName")
-                Log.d("EQUA", "updateRatingTransaction: $pureLecturerName")
                 val rating = transaction.get(lecturerRef)
-                val oldCount = rating["counts"] as Long //gets the count in the db
-                val oldAvrRating = rating["avr_rating"] as Long //gets the average rating in the db
-                val newCount = rating["counts"] as Long + 1 //increases the count in the db by 1
-                Log.d("EQUA1122", "updateRatingTransaction: $newCount")
-                val newPunctuality =
-                    ((rating["punctuality"] as Long * oldCount) + punctualityRating) / newCount //adds to the punctuality rating in the db
-                val newFluency =
-                    ((rating["fluency"] as Long * oldCount) + fluencyRating) / newCount //adds to the fluency rating in the db
-                val newEngagement =
-                    ((rating["engagement"] as Long * oldCount) + engagementRating) / newCount //adds to the engagement rating in the db
-                val newTechTips =
-                    ((rating["tech_tips"] as Long * oldCount) + techTipsRating) / newCount //adds to the tech tips rating in the db
 
+                //gets the count in the db
+                val oldCount = rating["counts"] as Long
+                //gets the average rating in the db
+                val oldAvrRating = rating["avr_rating"] as Long
+                //increases the count in the db by 1
+                val newCount = rating["counts"] as Long + 1
+                //adds to the punctuality rating average in the db
+                val newPunctuality =
+                    ((rating["punctuality"] as Long * oldCount) + punctualityRating) / newCount
+                //adds to the fluency rating average in the db
+                val newFluency =
+                    ((rating["fluency"] as Long * oldCount) + fluencyRating) / newCount
+                //adds to the engagement rating average in the db
+                val newEngagement =
+                    ((rating["engagement"] as Long * oldCount) + engagementRating) / newCount
+                //adds to the tech tips rating average in the db
+                val newTechTips =
+                    ((rating["tech_tips"] as Long * oldCount) + techTipsRating) / newCount
                 //in order to successfully add the new ratings to the average, some math logic
                 val avrRatDissolved = oldCount * oldAvrRating
+                //total of the new ratings
                 val newTotalRating =
-                    (newPunctuality + newFluency + newEngagement + newTechTips) / 4 //total of the new ratings
+                    (newPunctuality + newFluency + newEngagement + newTechTips) / 4
+
+                //new average rating
                 val newAvrRating =
-                    (avrRatDissolved + newTotalRating) / newCount //new average rating
+                    (avrRatDissolved + newTotalRating) / newCount
 
 
                 updateRating(
